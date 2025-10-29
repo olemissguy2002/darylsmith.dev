@@ -1,5 +1,12 @@
 data "aws_caller_identity" "current" {}
 
+# Inline policy to avoid managed-policy version drift
+resource "aws_iam_role_policy" "gha_inline" {
+  name   = "CloudResumeTerraformInline-${var.account_suffix}"
+  role   = aws_iam_role.github_actions_role.id
+  policy = data.aws_iam_policy_document.terraform_policy_doc.json
+}
+
 # Create only when explicitly enabled (local bootstrap). Default is off in CI.
 resource "aws_iam_openid_connect_provider" "github" {
   count           = var.manage_oidc_provider ? 1 : 0
@@ -30,7 +37,10 @@ data "aws_iam_policy_document" "terraform_policy_doc" {
       "cloudfront:UpdateDistribution",
       "cloudfront:ListDistributions",
       "cloudfront:CreateOriginAccessControl",
-      "cloudfront:TagResource"
+      "cloudfront:TagResource",
+      "cloudfront:GetOriginAccessControl",
+      "cloudfront:ListOriginAccessControls",
+      "cloudfront:ListTagsForResource"
     ]
     resources = ["*"]
   }
@@ -72,7 +82,9 @@ data "aws_iam_policy_document" "terraform_policy_doc" {
       "iam:AttachRolePolicy","iam:DetachRolePolicy",
       "iam:CreatePolicy","iam:DeletePolicy","iam:GetPolicy",
       "iam:GetPolicyVersion","iam:CreatePolicyVersion","iam:DeletePolicyVersion",
-      "iam:ListAttachedRolePolicies","iam:ListRolePolicies","iam:ListPolicyVersions"
+      "iam:ListAttachedRolePolicies","iam:ListRolePolicies","iam:ListPolicyVersions",
+      "iam:GetOpenIDConnectProvider"
+
     ]
     resources = ["*"]
   }

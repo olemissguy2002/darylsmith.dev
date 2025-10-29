@@ -19,3 +19,9 @@ variable "hosted_zone_id" {
   description = "Z03958751LAWXI1SDY0VK"
   type        = string
 }
+
+variable "manage_oidc_provider" {
+  description = "Create the GitHub OIDC provider (admin/bootstrap only). Otherwise, look up the existing provider."
+  type        = bool
+  default     = false
+}

@@ -50,7 +50,11 @@ data "aws_iam_policy_document" "gha_trust" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:olemissguy2002/darylsmith.dev:ref:refs/heads/main"]
+      values   = [
+        "repo:olemissguy2002/darylsmith.dev:ref:refs/heads/*",  # pushes to main
+        "repo:olemissguy2002/darylsmith.dev:pull_request",
+        "repo:olemissguy2002/darylsmith.dev:environment:Production"          # PR workflows
+      ]
     }
   }
 }

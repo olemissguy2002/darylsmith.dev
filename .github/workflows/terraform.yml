@@ -25,6 +25,7 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: gha-terraform
       - run: terraform init
       - run: terraform validate
       - run: terraform plan -input=false -out tfplan

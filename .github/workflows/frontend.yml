@@ -1,0 +1,32 @@
+
+name: Deploy Frontend to S3 + CloudFront
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    environment:
+      name: Production
+    defaults: { run: { working-directory: frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+      - name: Sync to S3 (bucket root)
+        run: aws s3 sync . s3://$SITE_BUCKET --delete
+        env:
+          SITE_BUCKET: ${{ secrets.SITE_BUCKET }}
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id $DIST_ID --paths "/*"
+        env:
+          DIST_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

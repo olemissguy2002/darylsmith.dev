@@ -1,0 +1,32 @@
+
+name: Terraform Plan & Apply (infra)
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/terraform.yml'
+  pull_request:
+    paths: [ 'infra/**' ]
+  workflow_dispatch:
+
+jobs:
+  tf:
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    environment:
+      name: Production
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+      - run: terraform init
+      - run: terraform validate
+      - run: terraform plan -input=false -out tfplan
+      - if: github.ref == 'refs/heads/main'
+        run: terraform apply -input=false -auto-approve tfplan

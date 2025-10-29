@@ -1,0 +1,26 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daryl Smith — Cloud Resume</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Daryl Smith</h1>
+      <p class="subtitle">AWS Cloud Practitioner | DevSecOps | Release Manager</p>
+      <p>Welcome to my Cloud Resume Challenge (AWS) site.</p>
+      <div class="counter">Visitors: <span id="count">…</span></div>
+    </section>
+  </main>
+  <script>
+    const API = "https://w08okrbe2a.execute-api.us-east-1.amazonaws.com/count";
+    fetch(API).then(r => r.json()).then(d => {
+      document.getElementById("count").innerText = d.count;
+    }).catch(() => { document.getElementById("count").innerText = "—"; });
+  </script>
+</body>
+</html>

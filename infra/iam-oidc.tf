@@ -83,6 +83,7 @@ data "aws_iam_policy_document" "terraform_policy_doc" {
       "iam:CreatePolicy","iam:DeletePolicy","iam:GetPolicy",
       "iam:GetPolicyVersion","iam:CreatePolicyVersion","iam:DeletePolicyVersion",
       "iam:ListAttachedRolePolicies","iam:ListRolePolicies","iam:ListPolicyVersions",
+      "iam:GetRolePolicy",
       "iam:GetOpenIDConnectProvider"
 
     ]

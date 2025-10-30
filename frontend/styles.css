@@ -21,3 +21,51 @@ a:visited {
   color: #a6c8ff;              /* slightly different for visited links */
 }
 
+/* --- Header & Navigation --- */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #111827; /* dark gray-blue */
+  color: #f9fafb; /* light text */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nav-menu a {
+  color: #80c8ff;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+}
+
+.nav-menu a:hover {
+  color: #facc15; /* gold hover */
+}
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional: add spacing so anchored sections don't hide under header */
+section {
+  scroll-margin-top: 100px;
+}

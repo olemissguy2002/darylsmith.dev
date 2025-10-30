@@ -5,3 +5,19 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-ser
 main{display:grid;place-items:center;min-height:100vh;padding:2rem}
 .card{width:100%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 40px rgba(0,0,0,.5);padding:2rem 2.5rem;border-radius:var(--radius);backdrop-filter:blur(6px)}
 h1{margin:0 0 .25rem;font-size:2rem}.subtitle{margin:0 0 1rem;color:var(--muted)}.counter{font-weight:600;font-size:1.1rem}
+/* ---- Link styling ---- */
+a {
+  color: #4da3ff;              /* bright blue (adjust to taste) */
+  text-decoration: none;       /* remove underline */
+  font-weight: 500;
+}
+
+a:hover {
+  color: #80c8ff;              /* lighter on hover */
+  text-decoration: underline;  /* underline when hovered */
+}
+
+a:visited {
+  color: #a6c8ff;              /* slightly different for visited links */
+}
+

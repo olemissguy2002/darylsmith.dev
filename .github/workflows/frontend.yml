@@ -1,33 +1,70 @@
-
 name: Deploy Frontend to S3 + CloudFront
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - '*'
-      - 'frontend/**'
-      - '.github/workflows/frontend.yml'
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions: { id-token: write, contents: read }
-    environment:
-      name: Production
-    defaults: { run: { working-directory: frontend } }
+    environment: { name: Production }
     steps:
-      - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Debug repo layout
+        run: |
+          pwd
+          ls -la
+          echo "---- frontend tree ----"
+          if command -v tree >/dev/null 2>&1; then tree -a -I .git frontend; else find frontend -maxdepth 3 -print; fi
+
+      - name: Configure AWS creds (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
-      - name: Sync to S3 (bucket root)
-        run: aws s3 sync . s3://$SITE_BUCKET --delete
+          role-session-name: gha-frontend
+
+      - name: Who am I?
+        run: aws sts get-caller-identity
+
+      - name: Echo deploy targets
+        run: |
+          echo "Bucket: $SITE_BUCKET"
+          echo "DistID: $DIST_ID"
         env:
           SITE_BUCKET: ${{ secrets.SITE_BUCKET }}
+          DIST_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+
+      # Sync explicitly from the frontend folder (no reliance on working-directory)
+      - name: Sync to S3 (bucket root)
+        run: |
+          aws s3 sync frontend/ s3://$SITE_BUCKET/ --delete
+          echo "---- bucket listing (top) ----"
+          aws s3 ls s3://$SITE_BUCKET/
+          echo "---- favicon check ----"
+          aws s3 ls s3://$SITE_BUCKET/ --recursive | grep -Ei 'favicon|apple-touch|manifest|index.html' || true
+        env:
+          SITE_BUCKET: ${{ secrets.SITE_BUCKET }}
+
+      # Ensure correct content-type for webmanifest (S3 can default to octet-stream)
+      - name: Fix manifest content-type (if present)
+        run: |
+          if aws s3api head-object --bucket "$SITE_BUCKET" --key "favicon_io/site.webmanifest" >/dev/null 2>&1; then
+            aws s3 cp s3://$SITE_BUCKET/favicon_io/site.webmanifest s3://$SITE_BUCKET/favicon_io/site.webmanifest \
+              --metadata-directive REPLACE --content-type application/manifest+json \
+              --cache-control "public, max-age=3600"
+          fi
+        env:
+          SITE_BUCKET: ${{ secrets.SITE_BUCKET }}
+
       - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id $DIST_ID --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
         env:
           DIST_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

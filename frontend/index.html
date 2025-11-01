@@ -1,6 +1,6 @@
 <header class="site-header">
   <div class="logo">
-    <img src="favicon.png" alt="Logo" /> 
+    <img src="favicon.png" alt="Logo" width="40" height="40" style="border-radius:6px;object-fit:contain;">
     <span class="site-title">Daryl Smith</span>
   </div>
   <nav class="nav-menu">
@@ -16,6 +16,58 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daryl Smith — Cloud Resume</title>
+  <style>
+  /* Force dark background immediately */
+  body {
+    background-color: #0f172a;
+    color: #f8fafc;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Roboto", sans-serif;
+  }
+
+  /* Header layout so it doesn’t stack ugly */
+  .site-header {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #f8fafc;
+    font-size: 1.1rem;
+  }
+
+  /* Prevent "huge" logo flash */
+  .logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .nav-menu a {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .nav-menu a:hover {
+    color: #38bdf8;
+  }
+  </style>
+<link rel="stylesheet" href="styles.css" />
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

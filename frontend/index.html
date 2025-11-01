@@ -65,6 +65,54 @@
   .nav-menu a:hover {
     color: #38bdf8;
   }
+  /* NEW: Core layout primitives so page doesn't look left-aligned before styles.css loads */
+
+  /* This should match whatever wrapper you use around your main content */
+  .page-wrapper,
+  .container,
+  main {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Section spacing so it doesn't look smashed at top-left */
+  .section,
+  .section-block {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* "Card" look so your panels don't flash as plain white text on the dark bg */
+  .card {
+    background-color: #1e293b;        /* dark surface */
+    border-radius: 0.75rem;            /* ~12px rounded */
+    padding: 1.5rem;
+    border: 1px solid rgba(148, 163, 184, 0.15); /* subtle border */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);     /* depth */
+    color: #f8fafc;
+  }
+
+  /* Headings so they don't look like giant default Times New Roman left-aligned blobs */
+  h1, h2, h3 {
+    color: #f8fafc;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    text-wrap: balance;
+  }
+
+  p {
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
   </style>
 <link rel="stylesheet" href="styles.css" />
 
